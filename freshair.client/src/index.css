@@ -1,3 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300..800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --red: #e5202e;
+  /* --blue: #353c8b; */
+  /* --blue: #33bddb; */
+  --blue: #01579b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 14px !important;
+  font-family: "Open Sans", sans-serif !important;
+  color: #374151 !important;
+}
+
+/* * {
+  font-family: "Open Sans", sans-serif !important;
+} */
+
+input,
+button {
+  font-family: "Open Sans", sans-serif !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f7f7f7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--blue);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4e9cb1e7;
+}
+
+::selection {
+  /* background: var(--red-color); */
+  background: var(--blue);
+  color: #f7f7f7;
+}
+
+/*! OK Button In Swal */
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  background-color: var(--blue) !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+  box-shadow: 0 0 0 3px #33bcdb7a !important;
+}
+
+/*! Cancel Button In Swal */
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel {
+  background-color: #dc3545 !important;
+}
+div:where(.swal2-container) button:where(.swal2-styled).swal2-cancel:focus {
+  box-shadow: 0 0 0 3px #dc354561 !important;
+}

@@ -1,4 +1,168 @@
 main {
-  min-height: calc(100dvh - 70px);
+  height: calc(100dvh - 70px);
   padding: 10px;
+  position: relative;
+}
+
+.projects {
+  .MuiDataGrid-root {
+    .MuiDataGrid-filler {
+      height: 0 !important;
+    }
+    .striped-row-even {
+      background-color: #fbfef8;
+      cursor: pointer;
+    }
+    .striped-row-odd {
+      background-color: #fbfef8;
+      cursor: pointer;
+    }
+    .MuiDataGrid-cell:focus {
+      outline: none;
+    }
+    .MuiDataGrid-columnHeader,
+    .MuiDataGrid-row--borderBottom {
+      background-color: #fbfef8 !important;
+    }
+    .MuiDataGrid-filler {
+      display: none !important;
+    }
+  }
+}
+
+/* .design { */
+.MuiTabs-root {
+  background-color: var(--blue);
+  button {
+    color: white !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+  .MuiTabs-indicator {
+    background: white !important;
+  }
+  .MuiSvgIcon-root {
+    fill: white !important;
+  }
+}
+.MuiAutocomplete-inputRoot {
+  font-size: 12px !important;
+  padding-right: 12px !important;
+  font-weight: 600 !important;
+  color: var(--blue) !important;
+}
+.MuiAutocomplete-clearIndicator {
+  display: none !important;
+}
+.MuiTabPanel-root {
+  padding: 0 !important;
+}
+.MuiAccordionSummary-root {
+  background-color: #f7f7f7 !important;
+  min-height: 50px !important;
+  .MuiAccordionSummary-content {
+    margin: 0px !important;
+  }
+}
+.MuiFormControlLabel-root {
+  margin: 0px !important;
+}
+.MuiFormControlLabel-label {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--blue) !important;
+}
+.MuiAccordion-root.Mui-expanded {
+  margin: 0px !important;
+}
+.MuiRadio-colorPrimary.Mui-checked,
+.MuiCheckbox-colorPrimary.Mui-checked,
+.MuiInput-input {
+  color: var(--blue) !important;
+}
+.MuiInput-root::after {
+  border-color: var(--blue) !important;
+}
+/* } */
+
+.MuiAutocomplete-option {
+  color: var(--blue) !important;
+  font-size: 12px !important;
+
+  .generalData-AHUDeck1 {
+    animation: AHUDeck1 0.8s ease infinite alternate;
+  }
+
+  .generalData-AHUDeck2 {
+    animation: AHUDeck2 0.8s ease infinite alternate;
+  }
+
+  .generalData-AHUDeck3 {
+    animation: AHUDeck3 0.8s ease infinite alternate;
+  }
+
+  .generalData-AHUDeck4 {
+    animation: AHUDeck4 0.8s ease infinite alternate;
+  }
+}
+
+.MuiAutocomplete-option:has(.generalData-AHUDeck1),
+.MuiAutocomplete-option:has(.generalData-AHUDeck2),
+.MuiAutocomplete-option:has(.generalData-AHUDeck3) {
+  border-bottom: 1px solid gray;
+}
+
+.MuiSvgIcon-colorPrimary {
+  fill: var(--blue) !important;
+}
+.MuiButton-outlinedPrimary {
+  color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+
+.MuiInputLabel-root {
+  font-size: 14px !important;
+}
+
+.swal2-popup {
+  font-size: 14px !important;
+}
+.MuiOutlinedInput-notchedOutline legend {
+  font-size: 0.65em !important;
+}
+
+@keyframes AHUDeck1 {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(15px);
+  }
+}
+
+@keyframes AHUDeck2 {
+  from {
+    transform: translateX(15px);
+  }
+  to {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes AHUDeck3 {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes AHUDeck4 {
+  from {
+    transform: rotate(-180deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
 }

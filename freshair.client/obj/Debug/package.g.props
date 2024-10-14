@@ -12,7 +12,9 @@
     <PackageJsonDependenciesEmotionReact Condition="$(PackageJsonDependenciesEmotionReact) == ''">^11.13.3</PackageJsonDependenciesEmotionReact>
     <PackageJsonDependenciesEmotionStyled Condition="$(PackageJsonDependenciesEmotionStyled) == ''">^11.13.0</PackageJsonDependenciesEmotionStyled>
     <PackageJsonDependenciesMuiIconsMaterial Condition="$(PackageJsonDependenciesMuiIconsMaterial) == ''">^6.1.0</PackageJsonDependenciesMuiIconsMaterial>
+    <PackageJsonDependenciesMuiLab Condition="$(PackageJsonDependenciesMuiLab) == ''">^6.0.0-beta.10</PackageJsonDependenciesMuiLab>
     <PackageJsonDependenciesMuiMaterial Condition="$(PackageJsonDependenciesMuiMaterial) == ''">^6.1.0</PackageJsonDependenciesMuiMaterial>
+    <PackageJsonDependenciesMuiXDataGrid Condition="$(PackageJsonDependenciesMuiXDataGrid) == ''">^7.18.0</PackageJsonDependenciesMuiXDataGrid>
     <PackageJsonDependenciesReactThreeDrei Condition="$(PackageJsonDependenciesReactThreeDrei) == ''">^9.112.0</PackageJsonDependenciesReactThreeDrei>
     <PackageJsonDependenciesReactThreeFiber Condition="$(PackageJsonDependenciesReactThreeFiber) == ''">^8.17.7</PackageJsonDependenciesReactThreeFiber>
     <PackageJsonDependenciesTypesThree Condition="$(PackageJsonDependenciesTypesThree) == ''">^0.168.0</PackageJsonDependenciesTypesThree>

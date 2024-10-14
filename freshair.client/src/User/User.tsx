@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import Loading from "../Components/Loading";
@@ -7,32 +7,70 @@ import Navbar from "../Components/Navbar";
 
 import Design from "./Pages/Design";
 
-import { globalState } from "../Components/StateProvider";
-import Projects from "./Pages/Projects";
+import { UseGlobalState } from "../Components/States/GlobalState";
+import Dashboard from "./Pages/Dashboard";
 
 import "./user.css";
+import Project from "./Pages/Project";
+// import Footer from "../Components/Footer";
+
+interface Unit {
+  Dimensions: string;
+  Temperature: string;
+  Weight: string;
+  WaterFlowRate: string;
+  FinsPerLength: string;
+  Capacity: string;
+  // SensibleCapacity: string;
+  WaterPressureDrop: string;
+  StaticPressure: string;
+  CoilHumidity: string;
+  AirFlowRate: string;
+  WaterVolumeAcrossCoil: string;
+  CoilHeaderAndConnection: string;
+  RefrigerantMassFlow: string;
+  AirVelocity: string;
+  NominalPower: string;
+  PulleyDiameter: string;
+  ShaftDiameter: string;
+  NicotraCentredist: string;
+  BeltSpeed: string;
+  HumidifierLoad: string;
+  CircuitLength: string;
+  Altitude: string;
+  Torque: string;
+}
 
 type User = {
   id: number;
   name: string;
   token: string;
-  role: string;
+  permission: string;
+  units: Unit;
 };
 
 const User = () => {
-  const { setState } = globalState();
+  const navigate = useNavigate();
+  const { setGlobalState } = UseGlobalState();
+  const [dataFetched, setDataFetched] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     if (storedUser) {
       const user: User = JSON.parse(storedUser);
-      setState((prev) => ({ ...prev, user }));
+      setGlobalState((prev) => ({
+        ...prev,
+        user,
+      }));
+      setAxiosDefaultHeaders();
+      setDataFetched(true);
+    } else {
+      navigate("/");
     }
-    setAxiosDefaultHeaders();
-  }, [setState]);
+  }, [setGlobalState, navigate]);
 
   const setAxiosDefaultHeaders = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
@@ -40,15 +78,23 @@ const User = () => {
     }
   };
 
-  return (
-    <>
+  return dataFetched ? (
+    <div className="min-h-dvh flex flex-col relative">
       <Navbar />
       <Routes>
         <Route
-          path="/projects"
+          path="/dashboard"
           element={
             <Suspense fallback={<Loading />}>
-              <Projects />
+              <Dashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/project"
+          element={
+            <Suspense fallback={<Loading />}>
+              <Project />
             </Suspense>
           }
         />
@@ -63,7 +109,10 @@ const User = () => {
 
         <Route path="*" element={<h1>Error : 404 , Page Not Found</h1>} />
       </Routes>
-    </>
+      {/* <Footer /> */}
+    </div>
+  ) : (
+    <Loading />
   );
 };
 

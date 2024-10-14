@@ -3,30 +3,85 @@ import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 
-import Logo from "../../src/imgs/Logo.png";
 import { Button } from "@mui/material";
 
-import { globalState } from "./StateProvider";
+import { UseGlobalState } from "./States/GlobalState";
 import Swal from "sweetalert2";
+import Loading from "./Loading";
 type User = {
   name?: string;
   password?: string;
 };
 
 const Login = () => {
-  const { setState } = globalState();
-
+  const { globalState, setGlobalState } = UseGlobalState();
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({});
 
   useEffect(() => {
     navigate("/");
     setAxiosDefaultHeaders();
+    setGlobalState({
+      server: "https://localhost:7005",
+      user: {
+        id: 0,
+        name: "",
+        token: "",
+        permission: "",
+        units: {
+          Dimensions: "",
+          Temperature: "",
+          Weight: "",
+          WaterFlowRate: "",
+          FinsPerLength: "",
+          Capacity: "",
+          // SensibleCapacity: "",
+          WaterPressureDrop: "",
+          StaticPressure: "",
+          CoilHumidity: "",
+          AirFlowRate: "",
+          WaterVolumeAcrossCoil: "",
+          CoilHeaderAndConnection: "",
+          RefrigerantMassFlow: "",
+          AirVelocity: "",
+          NominalPower: "",
+          PulleyDiameter: "",
+          ShaftDiameter: "",
+          NicotraCentredist: "",
+          BeltSpeed: "",
+          HumidifierLoad: "",
+          CircuitLength: "",
+          Altitude: "",
+          Torque: "",
+        },
+      },
+      openedProject: {
+        id: 0,
+        Name: "",
+        CreatedBy: "",
+        CreatedAt: "",
+        Reference: "",
+        Consultant: "",
+        Contractor: "",
+        Client: "",
+        Note: "",
+      },
+      openedProjectTags: [],
+      openedTag: {
+        name: "",
+        inputData: {},
+        sections: [],
+      },
+      sections: [],
+      accessories: [],
+    });
+    sessionStorage.clear();
     // eslint-disable-next-line
   }, []);
 
   const setAxiosDefaultHeaders = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
@@ -36,31 +91,34 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!user.name || !user.password) {
+      Swal.fire({
+        icon: "info",
+        title: "Please fill out all fields",
+      });
+      return;
+    }
     try {
-      // const response = await axios.post(
-      //   `${state.server}/api/user/login`,
-      //   user
-      // );
-      const response = {
-        data: {
-          id: 1,
-          name: "user1",
-          token: "token",
-          role: "user",
-        },
-        status: 200,
-      };
-      if (response.status == 200) {
-        setState((prev) => ({ ...prev, user: response.data }));
+      setLoading(true);
+      const response = await axios.post(
+        `${globalState.server}/api/account/login`,
+        {
+          Username: user.name,
+          Password: user.password,
+        }
+      );
 
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.status == 200) {
+        setGlobalState((prev) => ({ ...prev, user: response.data }));
+
+        sessionStorage.setItem("token", response.data.token);
+        sessionStorage.setItem("user", JSON.stringify(response.data));
 
         setAxiosDefaultHeaders();
         if (response.data.role === "admin") {
           navigate("/admin");
         } else {
-          navigate(`/user/projects`);
+          navigate(`/user/dashboard`);
         }
       }
     } catch (error) {
@@ -68,28 +126,29 @@ const Login = () => {
       if (isAxiosError(error)) {
         if (error.response?.status == 401) {
           Swal.fire({
-            title: "Error",
-            text: "Invalid username or password",
+            icon: "warning",
+            title: "Invalid username or password",
+            width: 550,
+          });
+        } else if (error.response?.data.message) {
+          Swal.fire({
             icon: "error",
+            title: error.response?.data.message,
+            text: error.response?.data.error,
             confirmButtonText: "Ok",
           });
         }
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "Something went wrong",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main>
       <div className="w-[500px] mt-20 mx-auto flex flex-col items-center bg-gray-100 rounded-md p-5 shadow-xl">
-        <img className="w-1/2" src={Logo} alt="logo" />
-        <h5 className="my-6 font-semibold text-2xl">
+        <img className="w-1/2" src={"../../src/imgs/Logo2.png"} alt="logo" />
+        <h5 className="my-6 font-semibold text-lg">
           Fresh Air Design Software
         </h5>
 
@@ -104,7 +163,9 @@ const Login = () => {
             fullWidth
             label="Username"
             autoComplete="new-username"
+            autoFocus
           />
+
           <TextField
             value={user.password || ""}
             onChange={(e) =>
@@ -119,9 +180,10 @@ const Login = () => {
           />
 
           <Button
+            color="primary"
             type="submit"
-            fullWidth
             variant="contained"
+            fullWidth
             size="large"
             sx={{ mt: 3, mb: 2 }}
           >
@@ -130,6 +192,7 @@ const Login = () => {
           <h1 className="text-center text-xl">Version 1.0</h1>
         </form>
       </div>
+      {loading && <Loading />}
     </main>
   );
 };
