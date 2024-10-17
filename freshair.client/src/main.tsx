@@ -28,14 +28,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />
 
-            <Route
-              path="/user/*"
-              element={
-                <Suspense fallback={<Loading />}>
-                  <User />
-                </Suspense>
-              }
-            />
+            <Route path="/user/*" element={<User />} />
 
             <Route
               path="/admin/*"

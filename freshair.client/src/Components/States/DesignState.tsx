@@ -19,8 +19,8 @@ interface State {
 
 const initialState: State = {
   sections: [],
-  height: 0.6,
-  depth: 0.4,
+  height: 1.8,
+  depth: 1.5,
   selectedSectionIndex: -1,
 };
 

@@ -6,13 +6,12 @@ interface ContextType {
 }
 
 interface Unit {
-  Dimensions: string;
+  Length: string;
   Temperature: string;
   Weight: string;
   WaterFlowRate: string;
   FinsPerLength: string;
   Capacity: string;
-  // SensibleCapacity: string;
   WaterPressureDrop: string;
   StaticPressure: string;
   CoilHumidity: string;
@@ -22,9 +21,8 @@ interface Unit {
   RefrigerantMassFlow: string;
   AirVelocity: string;
   NominalPower: string;
-  PulleyDiameter: string;
-  ShaftDiameter: string;
-  NicotraCentredist: string;
+  Diameter: string;
+  // ShaftDiameter: string;
   BeltSpeed: string;
   HumidifierLoad: string;
   CircuitLength: string;
@@ -87,13 +85,12 @@ const initialState: State = {
     token: "",
     permission: "",
     units: {
-      Dimensions: "",
+      Length: "",
       Temperature: "",
       Weight: "",
       WaterFlowRate: "",
       FinsPerLength: "",
       Capacity: "",
-      // SensibleCapacity: "",
       WaterPressureDrop: "",
       StaticPressure: "",
       CoilHumidity: "",
@@ -103,9 +100,7 @@ const initialState: State = {
       RefrigerantMassFlow: "",
       AirVelocity: "",
       NominalPower: "",
-      PulleyDiameter: "",
-      ShaftDiameter: "",
-      NicotraCentredist: "",
+      Diameter: "",
       BeltSpeed: "",
       HumidifierLoad: "",
       CircuitLength: "",

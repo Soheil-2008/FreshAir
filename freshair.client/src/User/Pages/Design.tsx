@@ -4,7 +4,7 @@ import {
   AccordionSummary,
   Autocomplete,
   Box,
-  Breadcrumbs,
+  // Breadcrumbs,
   Button,
   Checkbox,
   FormControlLabel,
@@ -15,7 +15,10 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  // Link,
+  useNavigate,
+} from "react-router-dom";
 
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -25,28 +28,27 @@ import TabPanel from "@mui/lab/TabPanel";
 import { UseGeneralDataState } from "../../Components/States/GeneralDataState";
 import { UseGlobalState } from "../../Components/States/GlobalState";
 
-// @ts-expect-error Not Found
-import AHUSimulationVideo from "../../imgs/AHU_Simulation.mp4";
-
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+// import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ReplayIcon from "@mui/icons-material/Replay";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ClearIcon from "@mui/icons-material/Clear";
-import ReorderIcon from "@mui/icons-material/Reorder";
+import AddIcon from "@mui/icons-material/Add";
 
 import Drawing from "./Drawing/Drawing";
 import { UseDesignState } from "../../Components/States/DesignState";
 import ManageSections from "./Drawing/Dialogs/Design/ManageSections";
+import AddNewModel from "./Drawing/Dialogs/Design/AddNewModel";
+import AccessSection from "./Drawing/Components/Cabinets/AccessSection";
 
 interface DialogOptions {
   open: boolean;
   type: string;
 }
 
-const Home = () => {
+const Design = () => {
   const navigate = useNavigate();
 
   const { generalData, setGeneralData } = UseGeneralDataState();
@@ -63,6 +65,7 @@ const Home = () => {
 
   const [tab, setTab] = useState("1");
 
+  // ! Check if project is opened
   useEffect(() => {
     if (
       !globalState.openedTag.name ||
@@ -74,6 +77,7 @@ const Home = () => {
     //eslint-disable-next-line
   }, []);
 
+  //! Fetch data
   useEffect(() => {
     const getData = () => {
       getGeneralDataOptions();
@@ -81,6 +85,7 @@ const Home = () => {
     getData();
   }, []);
 
+  //! Alert when refresh or close the tab
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -91,6 +96,13 @@ const Home = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
+
+  //! Open the Cabinet tab when section is selected
+  useEffect(() => {
+    if (designState.selectedSectionIndex >= 0) {
+      setTab("2");
+    }
+  }, [designState.selectedSectionIndex]);
 
   const getGeneralDataOptions = async () => {
     // Fetch data from server
@@ -103,7 +115,7 @@ const Home = () => {
 
   return isDataFetched ? (
     <main className="design container bg-[#eff2eb] flex flex-col px-5">
-      <div className="flex justify-between items-center mt-3 pb-4">
+      {/* <div className="flex justify-between items-center mt-3 pb-4">
         <Breadcrumbs
           separator={<NavigateNextIcon fontSize="small" />}
           className="absolute left-1/2 -translate-x-1/2"
@@ -132,15 +144,20 @@ const Home = () => {
             Design
           </Link>
         </Breadcrumbs>
-        <div className="flex gap-10">
-          <h4 className="text-base">
-            Project : {globalState.openedProject.Name}
-          </h4>
-          <h4 className="text-base">Tag : {globalState.openedTag.name}</h4>
+        <div className="flex gap-7">
+          <div className="">
+            <span className="text-sky-700 font-semibold">Project : </span>
+            <span> {globalState.openedProject.Name}</span>
+          </div>
+          <div className="">
+            <span className="text-sky-700 font-semibold">Tag : </span>
+            <span>{globalState.openedTag.name}</span>
+          </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex h-full overflow-hidden bg-white border border-slate-300">
+        {/*//! Inputs */}
         <div className="w-[29%] border-r border-slate-300 overflow-auto">
           <TabContext value={tab}>
             <Box className="border-b border-slate-300 shadow-md">
@@ -159,10 +176,10 @@ const Home = () => {
             <TabPanel value="1">
               <div className="flex flex-col gap-0 pt-2">
                 <Accordion
-                  expanded={expanded === "panel1"}
+                  expanded={expanded === "performance"}
                   onChange={() => {
-                    if (expanded === "panel1") setExpanded("");
-                    else setExpanded("panel1");
+                    if (expanded === "performance") setExpanded("");
+                    else setExpanded("performance");
                   }}
                 >
                   <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
@@ -191,7 +208,22 @@ const Home = () => {
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="end">
-                                m<sup>3</sup>/hr
+                                {/* m<sup>3</sup>/hr */}
+                                {globalState.user.units.AirFlowRate ===
+                                "m3/hr" ? (
+                                  <span className="MuiTypography-root">
+                                    m<sup>3</sup>/hr
+                                  </span>
+                                ) : globalState.user.units.AirFlowRate ===
+                                  "m3/s" ? (
+                                  <>
+                                    <span className="MuiTypography-root">
+                                      m<sup>3</sup>/s
+                                    </span>
+                                  </>
+                                ) : (
+                                  globalState.user.units.AirFlowRate
+                                )}
                               </InputAdornment>
                             ),
                           }}
@@ -221,7 +253,15 @@ const Home = () => {
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="end">
-                                in H<sub>2</sub>o
+                                {/* in H<sub>2</sub>o */}
+                                {globalState.user.units.StaticPressure ===
+                                "inH2O" ? (
+                                  <span className="MuiTypography-root">
+                                    in H<sub>2</sub>o
+                                  </span>
+                                ) : (
+                                  globalState.user.units.StaticPressure
+                                )}
                               </InputAdornment>
                             ),
                           }}
@@ -291,15 +331,128 @@ const Home = () => {
                 </Accordion>
 
                 <Accordion
-                  expanded={expanded === "panel2"}
+                  expanded={expanded === "type"}
                   onChange={() => {
-                    if (expanded === "panel2") setExpanded("");
-                    else setExpanded("panel2");
+                    if (expanded === "type") setExpanded("");
+                    else setExpanded("type");
                   }}
                 >
                   <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                     <h6 className="font-medium text-base text-[#353C8B]">
-                      Tunnel
+                      AHU Type
+                    </h6>
+                  </AccordionSummary>
+                  <AccordionDetails className="bg-white border-t border-gray-600">
+                    {/*//! AHU Type */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="w-1/2">
+                        <span className="text-xs font-medium">AHU Type</span>
+                      </div>
+                      <div className="w-1/2">
+                        <RadioGroup
+                          value={generalData.AHUType}
+                          onChange={(_, newValue) =>
+                            setGeneralData((prev) => ({
+                              ...prev,
+                              AHUType: newValue,
+                            }))
+                          }
+                        >
+                          <div className="flex justify-between">
+                            {generalData.AHUTypeOptions.map((option) => (
+                              <FormControlLabel
+                                key={option}
+                                value={option}
+                                control={<Radio size="small" />}
+                                label={option}
+                              />
+                            ))}
+                          </div>
+                        </RadioGroup>
+                      </div>
+                    </div>
+
+                    {/*//! Customize Structure */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="w-1/2">
+                        <span className="text-xs font-medium">
+                          Customize Structure
+                        </span>
+                      </div>
+                      <div className="w-1/2">
+                        <RadioGroup
+                          value={generalData.customizeStructure}
+                          onChange={(_, newValue) =>
+                            setGeneralData((prev) => ({
+                              ...prev,
+                              customizeStructure: newValue,
+                            }))
+                          }
+                        >
+                          <div className="flex justify-between">
+                            {generalData.customizeStructureOptions.map(
+                              (option) => (
+                                <FormControlLabel
+                                  key={option}
+                                  value={option}
+                                  control={<Radio size="small" />}
+                                  label={option}
+                                />
+                              )
+                            )}
+                          </div>
+                        </RadioGroup>
+                      </div>
+                    </div>
+
+                    {/*//! Model */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="w-1/2">
+                        <span className="text-xs font-medium">
+                          Structure Model
+                        </span>
+                      </div>
+                      <div className="w-1/2">
+                        <Autocomplete
+                          value={generalData.model}
+                          onChange={(_, newValue) =>
+                            setGeneralData((prev) => ({
+                              ...prev,
+                              model: newValue ? newValue : "",
+                            }))
+                          }
+                          options={generalData.ModelOptions}
+                          renderInput={(params) => (
+                            <TextField {...params} variant="standard" />
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/*//! Add New Model */}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      startIcon={<AddIcon />}
+                      onClick={() =>
+                        setDialogOptions({ open: true, type: "addNewModel" })
+                      }
+                    >
+                      Model
+                    </Button>
+                  </AccordionDetails>
+                </Accordion>
+
+                <Accordion
+                  expanded={expanded === "structure"}
+                  onChange={() => {
+                    if (expanded === "structure") setExpanded("");
+                    else setExpanded("structure");
+                  }}
+                >
+                  <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+                    <h6 className="font-medium text-base text-[#353C8B]">
+                      Structure
                     </h6>
                   </AccordionSummary>
                   <AccordionDetails className="bg-white border-t border-gray-600">
@@ -593,10 +746,10 @@ const Home = () => {
                 </Accordion>
 
                 <Accordion
-                  expanded={expanded === "panel3"}
+                  expanded={expanded === "unitsSpecifications"}
                   onChange={() => {
-                    if (expanded === "panel3") setExpanded("");
-                    else setExpanded("panel3");
+                    if (expanded === "unitsSpecifications") setExpanded("");
+                    else setExpanded("unitsSpecifications");
                   }}
                 >
                   <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
@@ -1033,10 +1186,10 @@ const Home = () => {
                 </Accordion>
 
                 <Accordion
-                  expanded={expanded === "panel4"}
+                  expanded={expanded === "configuration"}
                   onChange={() => {
-                    if (expanded === "panel4") setExpanded("");
-                    else setExpanded("panel4");
+                    if (expanded === "configuration") setExpanded("");
+                    else setExpanded("configuration");
                   }}
                 >
                   <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
@@ -1044,6 +1197,7 @@ const Home = () => {
                       Configuration
                     </h6>
                   </AccordionSummary>
+
                   <AccordionDetails className="bg-white border-t border-gray-600">
                     {/*//! Application Type */}
                     <div className="flex items-center justify-between mb-1">
@@ -1164,6 +1318,65 @@ const Home = () => {
                       </div>
                     </div>
 
+                    {/*//! Currency Settings */}
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="w-1/2">
+                        <span className="text-xs font-medium">
+                          Factor of changing
+                        </span>
+                      </div>
+                      <div className="w-1/2 flex items-center gap-5">
+                        <span className="text-xs">(USD)</span>
+                        {/* <RadioGroup
+                            value={generalData.currencyFactor}
+                            onChange={(_, newValue) =>
+                              setGeneralData((prev) => ({
+                                ...prev,
+                                currencyFactor: newValue,
+                              }))
+                            }
+                          >
+                            <div className="flex flex-col justify-between">
+                              <FormControlLabel
+                                value={"*"}
+                                control={<Radio size="small" />}
+                                label={"*"}
+                              />
+                              <FormControlLabel
+                                value={"/"}
+                                control={<Radio size="small" />}
+                                label={"/"}
+                              />
+                            </div>
+                          </RadioGroup> */}
+
+                        <Autocomplete
+                          value={generalData.currencyFactor}
+                          onChange={(_, newValue) =>
+                            setGeneralData((prev) => ({
+                              ...prev,
+                              currencyFactor: newValue ? newValue : "",
+                            }))
+                          }
+                          options={["*", "/"]}
+                          renderInput={(params) => (
+                            <TextField {...params} variant="standard" />
+                          )}
+                        />
+                        <TextField
+                          variant="standard"
+                          value={generalData.currencyFactorValue}
+                          type="number"
+                          onChange={(e) =>
+                            setGeneralData((prev) => ({
+                              ...prev,
+                              currencyFactorValue: parseFloat(e.target.value),
+                            }))
+                          }
+                        />
+                      </div>
+                    </div>
+
                     {/*//! Unit QTY */}
                     <div className="flex items-center justify-between mb-1">
                       <div className="w-1/2">
@@ -1193,15 +1406,18 @@ const Home = () => {
             </TabPanel>
             <TabPanel value="2">
               <div className="flex flex-col gap-0 pt-2">
-                {designState.sections.length > 0 &&
-                  designState.selectedSectionIndex >= 0 && (
-                    <h2>
-                      {
-                        designState.sections[designState.selectedSectionIndex]
-                          .name
-                      }
-                    </h2>
-                  )}
+                {designState.selectedSectionIndex >= 0 ? (
+                  designState.sections[designState.selectedSectionIndex]
+                    .name === "Access Section" ? (
+                    <AccessSection />
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  <h2 className="text-center text-xl font-medium italic">
+                    Click on Section to view details
+                  </h2>
+                )}
               </div>
             </TabPanel>
             <TabPanel value="3">Component</TabPanel>
@@ -1209,11 +1425,16 @@ const Home = () => {
           </TabContext>
         </div>
 
+        {/*//! Design & Video */}
         <div className="w-[56%] border-r border-slate-300 overflow-auto flex flex-col items-center">
           <div className="w-full h-full relative">
             {designState.sections.length === 0 ? (
               <div className="mt-10">
-                <video src={AHUSimulationVideo} autoPlay={true} loop />
+                <video
+                  src={"/public/imgs/AHU_Simulation.mp4"}
+                  autoPlay={true}
+                  loop
+                />
                 <div className="overlay bg-white w-full h-10 absolute bottom-0"></div>
               </div>
             ) : (
@@ -1224,11 +1445,16 @@ const Home = () => {
                     size="small"
                     variant="outlined"
                     onClick={() =>
-                      setDesignState((prev) => ({ ...prev, sections: [] }))
+                      setDesignState((prev) => ({
+                        ...prev,
+                        sections: [],
+                        selectedSectionIndex: -1,
+                      }))
                     }
                   >
                     Clear
                   </Button>
+
                   <Button
                     size="small"
                     startIcon={<SettingsIcon />}
@@ -1246,56 +1472,50 @@ const Home = () => {
           </div>
         </div>
 
+        {/*//! Sections */}
         <div className="w-1/6 overflow-auto">
-          {/* <div className="flex"> */}
           <div className="flex flex-col pt-2">
-            <h2 className="text-base font-semibold text-blue-800 pl-2">
+            <h2 className="text-base font-semibold text-sky-700 pl-2">
               Sections
             </h2>
             {globalState.sections.map((section) => (
-              <div
+              <button
                 key={section.name}
-                onClick={() => {
+                onDoubleClick={() => {
                   setDesignState((prev) => ({
                     ...prev,
                     sections: [...prev.sections, section],
                   }));
                 }}
-                className="p-1 hover:bg-[#01579b] hover:text-white hover:shadow-md cursor-pointer border-b"
+                className="p-2 hover:border-l-4 border-sky-700 hover:shadow-md cursor-pointer transition-all duration-100 flex items-center gap-2 "
               >
-                {section.name}
-              </div>
+                <img
+                  src={`/public/icons/${section.name}.png`}
+                  alt=""
+                  className="size-6"
+                  onError={(e) => {
+                    e.currentTarget.classList.add("hidden");
+                  }}
+                />
+                <span className="font-medium text-sky-700">{section.name}</span>
+              </button>
             ))}
           </div>
-          {/* <div className="flex flex-col pt-2">
-              <h2 className="text-base font-semibold text-blue-800 pl-2">
-                Accessories
-              </h2>
-              {globalState.accessories.map((accessory) => (
-                <div
-                  key={accessory}
-                  onClick={() => {}}
-                  className="p-1 hover:bg-[#01579b] hover:text-white hover:shadow-md cursor-pointer border-b"
-                >
-                  {accessory}
-                </div>
-              ))}
-            </div> */}
-          {/* </div> */}
         </div>
       </div>
-      {dialogOptions.open ? (
-        dialogOptions.type === "manageSections" ? (
-          <ManageSections
-            open={dialogOptions.open}
-            setDialogOptions={setDialogOptions}
-          />
-        ) : null
-      ) : null}
+
+      <ManageSections
+        open={dialogOptions.open && dialogOptions.type === "manageSections"}
+        setDialogOptions={setDialogOptions}
+      />
+      <AddNewModel
+        open={dialogOptions.open && dialogOptions.type === "addNewModel"}
+        setDialogOptions={setDialogOptions}
+      />
     </main>
   ) : (
     <LinearProgress color="inherit" />
   );
 };
 
-export default Home;
+export default Design;

@@ -1,5 +1,4 @@
 import { Canvas } from "@react-three/fiber";
-// import { useState } from "react";
 import { OrbitControls } from "@react-three/drei";
 
 import Section from "./Section";
@@ -22,23 +21,21 @@ const Drawing = () => {
         document.body.style.cursor = "auto";
       }}
       camera={{
-        fov: 10,
+        fov: 15,
         near: 0.1,
         far: 100,
         position: [-5, 5, 8],
       }}
     >
-      <OrbitControls
-        maxDistance={20}
-        minDistance={1}
-        // maxPolarAngle={5}
-        // minPolarAngle={-5}
-        rotateSpeed={0.25}
-      />
+      <OrbitControls maxDistance={20} minDistance={1} rotateSpeed={0.25} />
+
+      {/* //! LIGHTS */}
       <directionalLight position={[0, 0, 1]} intensity={1.5} />
       <directionalLight position={[1, 0, 1]} intensity={1} />
       <directionalLight position={[0, 1, 0]} intensity={1} />
       <ambientLight intensity={2} />
+
+      {/*//! CUBES */}
       <group position={[0, 0, 0]}>
         {designState.sections.map((section, index) => {
           const positionX =
@@ -54,8 +51,11 @@ const Drawing = () => {
               name={section.name}
               width={section.width}
               positionX={positionX}
-              isFirstCube={index === 0}
-              isLastCube={index === designState.sections.length - 1}
+              isFirstSection={index === 0}
+              isLastSection={
+                index === designState.sections.length - 1 ||
+                designState.sections[index + 1].name === "Fresh Air Intake"
+              }
               isSelected={designState.selectedSectionIndex === index}
               onClick={() =>
                 setDesignState((prev) => ({

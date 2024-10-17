@@ -11,11 +11,14 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
 import { UseGlobalState } from "../../Components/States/GlobalState";
 import axios, { isAxiosError } from "axios";
-// import Loading from "../../Components/Loading";
+
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -184,13 +187,12 @@ const Dashboard = () => {
         token: "",
         permission: "",
         units: {
-          Dimensions: "",
+          Length: "",
           Temperature: "",
           Weight: "",
           WaterFlowRate: "",
           FinsPerLength: "",
           Capacity: "",
-          // SensibleCapacity: "",
           WaterPressureDrop: "",
           StaticPressure: "",
           CoilHumidity: "",
@@ -200,9 +202,7 @@ const Dashboard = () => {
           RefrigerantMassFlow: "",
           AirVelocity: "",
           NominalPower: "",
-          PulleyDiameter: "",
-          ShaftDiameter: "",
-          NicotraCentredist: "",
+          Diameter: "",
           BeltSpeed: "",
           HumidifierLoad: "",
           CircuitLength: "",
@@ -234,10 +234,16 @@ const Dashboard = () => {
           outerSkinMaterial: response.data["Outer Skin Material"][0] || "",
         }));
 
-        const toRemove = response.data.Sections.map((ele: Section) => ({
-          name: ele,
-          width: 0.5,
-        }));
+        const toRemove = response.data.Sections.map((ele: Section) => {
+          let random = Math.random();
+          if (random < 0.3) {
+            random += 0.3;
+          }
+          return {
+            name: ele,
+            width: random,
+          };
+        });
 
         setGlobalState((prev) => ({
           ...prev,
@@ -569,6 +575,7 @@ const Dashboard = () => {
         }
       />
 
+      {/*//! Add Project */}
       <Dialog
         open={openNewProjectDialog}
         onClose={() => setOpenNewProjectDialog(false)}
@@ -697,21 +704,23 @@ const Dashboard = () => {
         </DialogContent>
 
         <DialogActions>
-          <div className="flex px-3 justify-between w-full pb-2">
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
             <Button
+              startIcon={<CloseIcon />}
               color="error"
               onClick={() => setOpenNewProjectDialog(false)}
               variant="outlined"
             >
               Cancel
             </Button>
-            <Button type="submit" variant="outlined">
+            <Button startIcon={<AddIcon />} type="submit" variant="outlined">
               Add
             </Button>
           </div>
         </DialogActions>
       </Dialog>
 
+      {/*//! Edit Project */}
       <Dialog
         open={openEditProjectDialog}
         onClose={() => setOpenEditProjectDialog(false)}
@@ -840,20 +849,25 @@ const Dashboard = () => {
         </DialogContent>
 
         <DialogActions>
-          <Button
-            color="error"
-            onClick={() => setOpenEditProjectDialog(false)}
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" variant="outlined">
-            Save
-          </Button>
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
+            <Button
+              startIcon={<CloseIcon />}
+              color="error"
+              onClick={() => setOpenEditProjectDialog(false)}
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+            <Button
+              startIcon={<SaveOutlinedIcon />}
+              type="submit"
+              variant="outlined"
+            >
+              Save
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
-
-      {/* {loading && <Loading />} */}
     </main>
   ) : (
     <LinearProgress color="inherit" />

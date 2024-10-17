@@ -21,9 +21,9 @@ body {
   color: #374151 !important;
 }
 
-/* * {
+* {
   font-family: "Open Sans", sans-serif !important;
-} */
+}
 
 input,
 button {
@@ -58,7 +58,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
   background-color: var(--blue) !important;
 }
 div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
-  box-shadow: 0 0 0 3px #33bcdb7a !important;
+  box-shadow: 0 0 0 3px #01589bae !important;
 }
 
 /*! Cancel Button In Swal */

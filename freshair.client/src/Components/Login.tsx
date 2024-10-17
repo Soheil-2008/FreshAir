@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import { UseGlobalState } from "./States/GlobalState";
 import Swal from "sweetalert2";
 import Loading from "./Loading";
+
 type User = {
   name?: string;
   password?: string;
@@ -22,60 +23,57 @@ const Login = () => {
   useEffect(() => {
     navigate("/");
     setAxiosDefaultHeaders();
-    setGlobalState({
-      server: "https://localhost:7005",
-      user: {
-        id: 0,
-        name: "",
-        token: "",
-        permission: "",
-        units: {
-          Dimensions: "",
-          Temperature: "",
-          Weight: "",
-          WaterFlowRate: "",
-          FinsPerLength: "",
-          Capacity: "",
-          // SensibleCapacity: "",
-          WaterPressureDrop: "",
-          StaticPressure: "",
-          CoilHumidity: "",
-          AirFlowRate: "",
-          WaterVolumeAcrossCoil: "",
-          CoilHeaderAndConnection: "",
-          RefrigerantMassFlow: "",
-          AirVelocity: "",
-          NominalPower: "",
-          PulleyDiameter: "",
-          ShaftDiameter: "",
-          NicotraCentredist: "",
-          BeltSpeed: "",
-          HumidifierLoad: "",
-          CircuitLength: "",
-          Altitude: "",
-          Torque: "",
-        },
-      },
-      openedProject: {
-        id: 0,
-        Name: "",
-        CreatedBy: "",
-        CreatedAt: "",
-        Reference: "",
-        Consultant: "",
-        Contractor: "",
-        Client: "",
-        Note: "",
-      },
-      openedProjectTags: [],
-      openedTag: {
-        name: "",
-        inputData: {},
-        sections: [],
-      },
-      sections: [],
-      accessories: [],
-    });
+    // setGlobalState({
+    //   server: "https://localhost:7005",
+    //   user: {
+    //     id: 0,
+    //     name: "",
+    //     token: "",
+    //     permission: "",
+    //     units: {
+    //       Length: "",
+    //       Temperature: "",
+    //       Weight: "",
+    //       WaterFlowRate: "",
+    //       FinsPerLength: "",
+    //       Capacity: "",
+    //       WaterPressureDrop: "",
+    //       StaticPressure: "",
+    //       CoilHumidity: "",
+    //       AirFlowRate: "",
+    //       WaterVolumeAcrossCoil: "",
+    //       CoilHeaderAndConnection: "",
+    //       RefrigerantMassFlow: "",
+    //       AirVelocity: "",
+    //       NominalPower: "",
+    //       Diameter: "",
+    //       BeltSpeed: "",
+    //       HumidifierLoad: "",
+    //       CircuitLength: "",
+    //       Altitude: "",
+    //       Torque: "",
+    //     },
+    //   },
+    //   openedProject: {
+    //     id: 0,
+    //     Name: "",
+    //     CreatedBy: "",
+    //     CreatedAt: "",
+    //     Reference: "",
+    //     Consultant: "",
+    //     Contractor: "",
+    //     Client: "",
+    //     Note: "",
+    //   },
+    //   openedProjectTags: [],
+    //   openedTag: {
+    //     name: "",
+    //     inputData: {},
+    //     sections: [],
+    //   },
+    //   sections: [],
+    //   accessories: [],
+    // });
     sessionStorage.clear();
     // eslint-disable-next-line
   }, []);
@@ -112,6 +110,7 @@ const Login = () => {
         setGlobalState((prev) => ({ ...prev, user: response.data }));
 
         sessionStorage.setItem("token", response.data.token);
+        delete response.data.token;
         sessionStorage.setItem("user", JSON.stringify(response.data));
 
         setAxiosDefaultHeaders();
@@ -145,12 +144,22 @@ const Login = () => {
   };
 
   return (
-    <main>
-      <div className="w-[500px] mt-20 mx-auto flex flex-col items-center bg-gray-100 rounded-md p-5 shadow-xl">
-        <img className="w-1/2" src={"../../src/imgs/Logo2.png"} alt="logo" />
-        <h5 className="my-6 font-semibold text-lg">
-          Fresh Air Design Software
-        </h5>
+    <div className="flex h-dvh">
+      <div className="w-2/3 mt-24">
+        <video src={"/public/imgs/AHU_Simulation.mp4"} autoPlay={true} loop />
+      </div>
+
+      <div className="w-1/3 h-full flex flex-col items-center justify-between rounded-md p-10 shadow-xl">
+        <div className="flex flex-col items-center">
+          <img className="w-1/2" src={"/public/imgs/Logo2.png"} alt="logo" />
+          <h5 className="my-6 font-semibold text-3xl">
+            Fresh Air Design Software
+          </h5>
+        </div>
+        <p className="text-gray-6 00">
+          Fresh Air Design Software is a tool for design and simulation AHU
+          systems.
+        </p>
 
         <form onSubmit={handleSubmit} noValidate>
           <TextField
@@ -158,7 +167,7 @@ const Login = () => {
             onChange={(e) =>
               setUser((prev) => ({ ...prev, name: e.target.value }))
             }
-            margin="normal"
+            margin="dense"
             required
             fullWidth
             label="Username"
@@ -171,7 +180,7 @@ const Login = () => {
             onChange={(e) =>
               setUser((prev) => ({ ...prev, password: e.target.value }))
             }
-            margin="normal"
+            margin="dense"
             required
             fullWidth
             label="Password"
@@ -180,20 +189,22 @@ const Login = () => {
           />
 
           <Button
+            sx={{
+              mt: 2,
+            }}
             color="primary"
             type="submit"
             variant="contained"
             fullWidth
             size="large"
-            sx={{ mt: 3, mb: 2 }}
           >
             Sign In
           </Button>
-          <h1 className="text-center text-xl">Version 1.0</h1>
         </form>
+        <h1 className="text-center text-xl">Version 1.0</h1>
       </div>
       {loading && <Loading />}
-    </main>
+    </div>
   );
 };
 

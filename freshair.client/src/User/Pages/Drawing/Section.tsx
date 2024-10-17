@@ -13,13 +13,13 @@ type Section = {
   name: string;
   width: number;
   positionX: number;
-  isFirstCube: boolean;
-  isLastCube: boolean;
+  isFirstSection: boolean;
+  isLastSection: boolean;
   isSelected: boolean;
   onClick: () => void;
 };
 
-const Cube = (section: Section) => {
+const Section = (section: Section) => {
   const { designState } = UseDesignState();
   const [isHovered, setIsHovered] = useState(false);
   const [sidesBasesColor] = useState("#a85650");
@@ -27,123 +27,139 @@ const Cube = (section: Section) => {
   const [screwsColor] = useState("#987D9A");
   const ref = useRef<THREE.Mesh>(null);
 
-  return (
-    <mesh
-      position={[section.positionX, 0, 0]}
-      ref={ref}
-      onPointerEnter={(e) => {
-        e.stopPropagation();
-        setIsHovered(true);
-      }}
-      onPointerLeave={(e) => {
-        e.stopPropagation();
-        setIsHovered(false);
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        section.onClick();
-      }}
-    >
-      <boxGeometry
-        args={[section.width, designState.height, designState.depth]}
-      />
-      <meshStandardMaterial
-        color={
-          section.isSelected ? "#0075ff" : isHovered ? "#dc3545" : section.color
-        }
-        transparent={true}
-        opacity={0.6}
-      />
-      <Edges scale={1} lineWidth={5} color={"black"} />
-
-      <CubeLabel
+  if (section.name === "Fresh Air Intake")
+    return (
+      <FreshAirIntake
         label={section.name}
-        sizeX={section.width}
-        sizeZ={designState.depth}
-      />
-
-      <LeftBase
-        sizeX={section.width}
-        sizeY={designState.height}
-        sizeZ={designState.depth}
-        color={sidesBasesColor}
-        color2={screwsColor}
-      />
-
-      <RightBase
-        sizeX={section.width}
-        sizeY={designState.height}
-        sizeZ={designState.depth}
-        color={sidesBasesColor}
-        color2={screwsColor}
-      />
-
-      <FrontBase
-        sizeX={section.width}
-        sizeY={designState.height}
-        sizeZ={designState.depth}
-        color={frontAndBackBasesColor}
-      />
-
-      <BackBase
-        sizeX={section.width}
-        sizeY={designState.height}
-        sizeZ={designState.depth}
-        color={frontAndBackBasesColor}
-      />
-
-      <WidthSize
+        positionX={section.positionX}
         sizeX={section.width}
         sizeY={designState.height}
         sizeZ={designState.depth}
       />
+    );
+  else
+    return (
+      <mesh
+        position={[section.positionX, 0, 0]}
+        ref={ref}
+        onPointerEnter={(e) => {
+          e.stopPropagation();
+          setIsHovered(true);
+        }}
+        onPointerLeave={(e) => {
+          e.stopPropagation();
+          setIsHovered(false);
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          section.onClick();
+        }}
+      >
+        <boxGeometry
+          args={[section.width, designState.height, designState.depth]}
+        />
+        <meshStandardMaterial
+          color={
+            section.isSelected
+              ? "#0075ff"
+              : isHovered
+              ? "#dc3545"
+              : section.color
+          }
+          transparent={true}
+          opacity={0.6}
+        />
 
-      {section.isFirstCube && (
-        <>
-          <HeightSize
-            sizeX={section.width}
-            sizeY={designState.height}
-            sizeZ={designState.depth}
-          />
+        <Edges scale={1} lineWidth={3.5} color={"black"} />
 
-          <DepthSize
-            sizeX={section.width}
-            sizeY={designState.height}
-            sizeZ={designState.depth}
-          />
-          <TotalWidthSize selectedSections={designState.sections} />
+        <SectionLabel
+          label={section.name}
+          sizeX={section.width}
+          sizeZ={designState.depth}
+        />
 
-          <FramesForFirstCube
-            sizeX={section.width}
-            sizeY={designState.height}
-            sizeZ={designState.depth}
-          />
-        </>
-      )}
+        <LeftBase
+          sizeX={section.width}
+          sizeY={designState.height}
+          sizeZ={designState.depth}
+          color={sidesBasesColor}
+          color2={screwsColor}
+        />
 
-      {section.isLastCube && (
-        <FramesForLastCube
+        <RightBase
+          sizeX={section.width}
+          sizeY={designState.height}
+          sizeZ={designState.depth}
+          color={sidesBasesColor}
+          color2={screwsColor}
+        />
+
+        <FrontBase
+          sizeX={section.width}
+          sizeY={designState.height}
+          sizeZ={designState.depth}
+          color={frontAndBackBasesColor}
+        />
+
+        <BackBase
+          sizeX={section.width}
+          sizeY={designState.height}
+          sizeZ={designState.depth}
+          color={frontAndBackBasesColor}
+        />
+
+        <WidthSize
           sizeX={section.width}
           sizeY={designState.height}
           sizeZ={designState.depth}
         />
-      )}
 
-      {!section.isFirstCube && !section.isLastCube && (
-        <FramesForMiddleCubes
-          sizeX={section.width}
-          sizeY={designState.height}
-          sizeZ={designState.depth}
-        />
-      )}
+        {section.isFirstSection && (
+          <>
+            <HeightSize
+              sizeX={section.width}
+              sizeY={designState.height}
+              sizeZ={designState.depth}
+            />
 
-      {/* {section.name === "Fan" && <FanModel color="#00a2ff" scale={1.2} />} */}
-      {/* {section.name === "Filter" && <FilterModel color="#523699" />} */}
-    </mesh>
-  );
+            <DepthSize
+              sizeX={section.width}
+              sizeY={designState.height}
+              sizeZ={designState.depth}
+            />
+            <TotalWidthSize selectedSections={designState.sections} />
+
+            <FramesForFirstSection
+              sizeX={section.width}
+              sizeY={designState.height}
+              sizeZ={designState.depth}
+            />
+          </>
+        )}
+
+        {section.isLastSection && (
+          <FramesForLastSection
+            sizeX={section.width}
+            sizeY={designState.height}
+            sizeZ={designState.depth}
+          />
+        )}
+
+        {!section.isFirstSection && !section.isLastSection && (
+          <FramesForMiddleSections
+            sizeX={section.width}
+            sizeY={designState.height}
+            sizeZ={designState.depth}
+          />
+        )}
+
+        {/* {section.name === "Fan" && <FanModel color="#00a2ff" scale={1.2} />} */}
+        {/* {section.name === "Filter" && <FilterModel color="#523699" />} */}
+      </mesh>
+    );
 };
 
-export default Cube;
+export default Section;
 
 // const FanModel = ({ color, scale }: { color: string; scale: number }) => {
 //   const group = useRef<THREE.Group>(null);
@@ -423,13 +439,18 @@ const BackBase = (props: {
   );
 };
 
-const CubeLabel = (props: { sizeX: number; sizeZ: number; label: string }) => {
+const SectionLabel = (props: {
+  sizeX: number;
+  sizeZ: number;
+  label: string;
+}) => {
   return (
     <Text
-      position={[0, 0, props.sizeZ / 2 + 0.01]}
+      position={[0, 0.5, props.sizeZ / 2 + 0.001]}
       fontSize={(props.sizeX * 1.5) / props.label.length}
       color="black"
       fontStyle="italic"
+      fontWeight={"bold"}
     >
       {props.label}
     </Text>
@@ -444,6 +465,7 @@ const WidthSize = (props: { sizeX: number; sizeY: number; sizeZ: number }) => {
         rotation={[-1.57, 0, 0]}
         fontSize={props.sizeX * 0.2}
         color="black"
+        fontWeight={"bold"}
       >
         {(props.sizeX * 100).toFixed(0)}
       </Text>
@@ -519,6 +541,7 @@ const HeightSize = (props: { sizeX: number; sizeY: number; sizeZ: number }) => {
         fontStyle="italic"
         anchorX="center"
         anchorY="middle"
+        fontWeight={"bold"}
       >
         {(props.sizeY * 100).toFixed(0)}
       </Text>
@@ -582,6 +605,7 @@ const DepthSize = (props: { sizeX: number; sizeY: number; sizeZ: number }) => {
         fontStyle="italic"
         anchorX="center"
         anchorY="middle"
+        fontWeight={"bold"}
       >
         {(props.sizeZ * 100).toFixed(0)}
       </Text>
@@ -677,6 +701,7 @@ const TotalWidthSize = (props: {
         ]}
         rotation={[-Math.PI / 2, 0, 0]}
         fontSize={0.2}
+        fontWeight={"bold"}
         color="black"
       >
         {totalWidth.toFixed(0)}
@@ -717,7 +742,7 @@ const TotalWidthSize = (props: {
   );
 };
 
-const FramesForFirstCube = (props: {
+const FramesForFirstSection = (props: {
   sizeX: number;
   sizeY: number;
   sizeZ: number;
@@ -863,7 +888,7 @@ const FramesForFirstCube = (props: {
   );
 };
 
-const FramesForMiddleCubes = (props: {
+const FramesForMiddleSections = (props: {
   sizeX: number;
   sizeY: number;
   sizeZ: number;
@@ -1103,7 +1128,7 @@ const FramesForMiddleCubes = (props: {
   );
 };
 
-const FramesForLastCube = (props: {
+const FramesForLastSection = (props: {
   sizeX: number;
   sizeY: number;
   sizeZ: number;
@@ -1252,6 +1277,59 @@ const FramesForLastCube = (props: {
           <meshStandardMaterial color={"red"} />
         </mesh>
       </group>
+    </group>
+  );
+};
+
+const FreshAirIntake = (props: {
+  positionX: number;
+  label: string;
+  sizeX: number;
+  sizeY: number;
+  sizeZ: number;
+}) => {
+  const trapezoidalShape = () => {
+    const shape = new THREE.Shape();
+    shape.lineTo(props.sizeY * 0.7, 0);
+    shape.lineTo(props.sizeX * 0.1, props.sizeX);
+    shape.lineTo(0, props.sizeX);
+    shape.closePath();
+    return shape;
+  };
+
+  return (
+    <group position={[props.positionX, 0, 0]}>
+      <mesh
+        position={[
+          -props.sizeX / 2,
+          (props.sizeY * 0.7) / 2,
+          (-props.sizeZ * 0.6) / 2,
+        ]}
+        rotation={[0, 0, -Math.PI / 2]}
+      >
+        <extrudeGeometry
+          args={[
+            trapezoidalShape(),
+            { depth: props.sizeZ * 0.6, bevelEnabled: false },
+          ]}
+        />
+
+        <meshStandardMaterial
+          color={"#987D9A"}
+          transparent={true}
+          opacity={0.6}
+        />
+
+        <Edges scale={1} lineWidth={2} color={"black"} />
+      </mesh>
+
+      <WidthSize sizeX={props.sizeX} sizeY={props.sizeY} sizeZ={props.sizeZ} />
+
+      <SectionLabel
+        label={props.label}
+        sizeX={props.sizeX}
+        sizeZ={props.sizeZ}
+      />
     </group>
   );
 };

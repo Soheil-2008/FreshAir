@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Dialog,
@@ -6,27 +6,30 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { LogoutOutlined } from "@mui/icons-material";
+
+import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveIcon from "@mui/icons-material/Save";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
+
 import { useEffect, useState } from "react";
 import { UseGlobalState } from "./States/GlobalState";
 import axios, { isAxiosError } from "axios";
 import Swal from "sweetalert2";
 
 type Units = {
-  Dimensions: string;
+  Length: string;
   Temperature: string;
   Weight: string;
   WaterFlowRate: string;
   FinsPerLength: string;
   Capacity: string;
-  // SensibleCapacity: string;
   WaterPressureDrop: string;
   StaticPressure: string;
   CoilHumidity: string;
@@ -36,9 +39,7 @@ type Units = {
   RefrigerantMassFlow: string;
   AirVelocity: string;
   NominalPower: string;
-  PulleyDiameter: string;
-  ShaftDiameter: string;
-  NicotraCentredist: string;
+  Diameter: string;
   BeltSpeed: string;
   HumidifierLoad: string;
   CircuitLength: string;
@@ -54,7 +55,7 @@ const Navbar = () => {
   const [page, setPage] = useState<string>("");
 
   const [newUnits, setNewUnits] = useState<Units>({
-    Dimensions: globalState.user.units.Dimensions,
+    Length: globalState.user.units.Length,
     Temperature: globalState.user.units.Temperature,
     Weight: globalState.user.units.Weight,
     WaterFlowRate: globalState.user.units.WaterFlowRate,
@@ -69,9 +70,7 @@ const Navbar = () => {
     RefrigerantMassFlow: globalState.user.units.RefrigerantMassFlow,
     AirVelocity: globalState.user.units.AirVelocity,
     NominalPower: globalState.user.units.NominalPower,
-    PulleyDiameter: globalState.user.units.PulleyDiameter,
-    ShaftDiameter: globalState.user.units.ShaftDiameter,
-    NicotraCentredist: globalState.user.units.NicotraCentredist,
+    Diameter: globalState.user.units.Diameter,
     BeltSpeed: globalState.user.units.BeltSpeed,
     HumidifierLoad: globalState.user.units.HumidifierLoad,
     CircuitLength: globalState.user.units.CircuitLength,
@@ -80,10 +79,13 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    if (location.pathname !== "/user/dashboard") {
-      setPage("not dashboard");
-    } else {
+    if (
+      location.pathname === "/user/dashboard" ||
+      location.pathname === "/user/project"
+    ) {
       setPage("dashboard");
+    } else {
+      setPage("not dashboard");
     }
   }, [location.pathname]);
 
@@ -96,13 +98,12 @@ const Navbar = () => {
         token: "",
         permission: "",
         units: {
-          Dimensions: "",
+          Length: "",
           Temperature: "",
           Weight: "",
           WaterFlowRate: "",
           FinsPerLength: "",
           Capacity: "",
-          // SensibleCapacity: "",
           WaterPressureDrop: "",
           StaticPressure: "",
           CoilHumidity: "",
@@ -112,9 +113,7 @@ const Navbar = () => {
           RefrigerantMassFlow: "",
           AirVelocity: "",
           NominalPower: "",
-          PulleyDiameter: "",
-          ShaftDiameter: "",
-          NicotraCentredist: "",
+          Diameter: "",
           BeltSpeed: "",
           HumidifierLoad: "",
           CircuitLength: "",
@@ -128,13 +127,46 @@ const Navbar = () => {
   const handleUpdateUnits = async () => {
     try {
       console.log(newUnits);
-      const response = await axios.post(`${globalState.server}/api/`, newUnits);
-      console.log(response);
+      const response = await axios.put(
+        `${globalState.server}/api/projects/editUnits/${globalState.user.id}`,
+        {
+          UnitsJSON: JSON.stringify(newUnits),
+        }
+      );
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Units updated successfully",
+          confirmButtonText: "Ok",
+        });
+
+        const oldGlobalState = globalState;
+        const newGlobalState = {
+          ...oldGlobalState,
+          user: {
+            ...oldGlobalState.user,
+            units: {
+              ...oldGlobalState.user.units,
+              ...newUnits,
+            },
+          },
+        };
+        sessionStorage.setItem("user", JSON.stringify(newGlobalState.user));
+        setGlobalState(newGlobalState);
+        setOpenSettingDialog(false);
+      }
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response?.status === 401) {
           resetUser();
           navigate("/");
+        } else if (error.response?.data.message) {
+          Swal.fire({
+            icon: "error",
+            title: error.response?.data.message,
+            text: error.response?.data.error,
+            confirmButtonText: "Ok",
+          });
         } else {
           Swal.fire({
             icon: "error",
@@ -155,12 +187,13 @@ const Navbar = () => {
   return (
     <nav className="bg-[#FBFEF8] h-[70px] p-2 flex justify-between items-center border shadow-inner shadow-gray-300">
       <div className=" w-[100px]">
-        <img src={"../../src/imgs/Logo2.png"} alt="logo" />
+        <img src={"/public/imgs/Logo2.png"} alt="logo" />
       </div>
 
       <div className="flex items-center gap-x-4">
         <Button
           variant={"outlined"}
+          size="small"
           startIcon={<SettingsIcon />}
           onClick={() => {
             setOpenSettingDialog(true);
@@ -168,18 +201,29 @@ const Navbar = () => {
         >
           Units Setting
         </Button>
-        <NavLink to={"/"}>
-          <IconButton
-            size="medium"
-            color="error"
-            onClick={() => {
-              sessionStorage.removeItem("token");
-              navigate("/");
-            }}
-          >
-            <LogoutOutlined />
-          </IconButton>
-        </NavLink>
+
+        <Button
+          color={"error"}
+          variant={"outlined"}
+          size="small"
+          endIcon={<LogoutOutlined />}
+          onClick={() => {
+            Swal.fire({
+              icon: "warning",
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              showCancelButton: true,
+              confirmButtonText: "Yes, Logout!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                navigate("/");
+                window.location.reload();
+              }
+            });
+          }}
+        >
+          Logout
+        </Button>
       </div>
 
       <Dialog
@@ -195,11 +239,15 @@ const Navbar = () => {
           },
         }}
       >
-        <DialogTitle>Update Software Units</DialogTitle>
+        <DialogTitle>
+          <h6 className="text-center text-2xl border-b-2 pb-2 border-sky-700 text-sky-700 font-semibold">
+            Update Software Units
+          </h6>
+        </DialogTitle>
 
         <DialogContent>
           <div className="flex flex-wrap mt-2 gap-y-5">
-            {/*//! Dimensions */}
+            {/*//! Length */}
             <div className="w-1/4 px-1">
               <FormControl
                 fullWidth
@@ -207,17 +255,18 @@ const Navbar = () => {
                 variant="outlined"
                 disabled={page === "not dashboard"}
               >
-                <InputLabel id="Dimensions">Dimensions</InputLabel>
+                <InputLabel id="Length">Length</InputLabel>
                 <Select
-                  label="Dimensions"
-                  labelId="Dimensions"
-                  name="Dimensions"
-                  value={newUnits.Dimensions}
+                  label="Length"
+                  labelId="Length"
+                  name="Length"
+                  value={newUnits.Length}
                   onChange={handleChangeUnit}
                 >
                   <MenuItem value={"in"}>in</MenuItem>
                   <MenuItem value={"m"}>m</MenuItem>
                   <MenuItem value={"mm"}>mm</MenuItem>
+                  <MenuItem value={"ft"}>ft</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -288,6 +337,9 @@ const Navbar = () => {
                   <MenuItem value={"m3/hr"}>
                     m<sup>3</sup>/hr
                   </MenuItem>
+                  <MenuItem value={"m3/s"}>
+                    m<sup>3</sup>/s
+                  </MenuItem>
                   <MenuItem value={"l/s"}>l/s</MenuItem>
                   <MenuItem value={"l/h"}>l/h</MenuItem>
                 </Select>
@@ -310,7 +362,7 @@ const Navbar = () => {
                   value={newUnits.FinsPerLength}
                   onChange={handleChangeUnit}
                 >
-                  <MenuItem value={"m"}>m</MenuItem>
+                  <MenuItem value={"fins/m"}>fins/m</MenuItem>
                   <MenuItem value={"fins/inch"}>fins/inch</MenuItem>
                 </Select>
               </FormControl>
@@ -412,8 +464,8 @@ const Navbar = () => {
                   value={newUnits.CoilHumidity}
                   onChange={handleChangeUnit}
                 >
-                  <MenuItem value={"g/kg"}>g / kg</MenuItem>
-                  <MenuItem value={"g/lb"}>g / lb</MenuItem>
+                  <MenuItem value={"g/kg"}>g/kg</MenuItem>
+                  <MenuItem value={"g/lb"}>g/lb</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -559,11 +611,12 @@ const Navbar = () => {
                 >
                   <MenuItem value={"kW"}>kW</MenuItem>
                   <MenuItem value={"W"}>W</MenuItem>
+                  <MenuItem value={"hp"}>hp</MenuItem>
                 </Select>
               </FormControl>
             </div>
 
-            {/*//! Pulley Diameter */}
+            {/*//! Diameter */}
             <div className="w-1/4 px-1">
               <FormControl
                 fullWidth
@@ -571,12 +624,12 @@ const Navbar = () => {
                 variant="outlined"
                 disabled={page === "not dashboard"}
               >
-                <InputLabel id="PulleyDiameter">Pulley Diameter</InputLabel>
+                <InputLabel id="Diameter">Diameter</InputLabel>
                 <Select
-                  label="Pulley Diameter"
-                  labelId="PulleyDiameter"
-                  name="PulleyDiameter"
-                  value={newUnits.PulleyDiameter}
+                  label="Diameter"
+                  labelId="Diameter"
+                  name="Diameter"
+                  value={newUnits.Diameter}
                   onChange={handleChangeUnit}
                 >
                   <MenuItem value={"in"}>in</MenuItem>
@@ -586,7 +639,7 @@ const Navbar = () => {
             </div>
 
             {/*//! Shaft Diameter */}
-            <div className="w-1/4 px-1">
+            {/* <div className="w-1/4 px-1">
               <FormControl
                 fullWidth
                 size="small"
@@ -605,10 +658,10 @@ const Navbar = () => {
                   <MenuItem value={"mm"}>mm</MenuItem>
                 </Select>
               </FormControl>
-            </div>
+            </div> */}
 
             {/*//! Nicotra Centre dist */}
-            <div className="w-1/4 px-1">
+            {/* <div className="w-1/4 px-1">
               <FormControl
                 fullWidth
                 size="small"
@@ -629,7 +682,7 @@ const Navbar = () => {
                   <MenuItem value={"mm"}>mm</MenuItem>
                 </Select>
               </FormControl>
-            </div>
+            </div> */}
 
             {/*//! Belt Speed */}
             <div className="w-1/4 px-1">
@@ -669,8 +722,8 @@ const Navbar = () => {
                   value={newUnits.HumidifierLoad}
                   onChange={handleChangeUnit}
                 >
-                  <MenuItem value={"kg/hr"}>kg / hr</MenuItem>
-                  <MenuItem value={"lb/hr"}>lb / hr</MenuItem>
+                  <MenuItem value={"kg/hr"}>kg/hr</MenuItem>
+                  <MenuItem value={"lb/hr"}>lb/hr</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -743,7 +796,7 @@ const Navbar = () => {
           </div>
 
           {page === "not dashboard" && (
-            <div className="w-1/6 mt-5 flex flex-col gap-2">
+            <div className="w-1/5 mt-5 flex flex-col gap-2">
               <span className="text-red-500 text-nowrap font-medium">
                 If you want to update units, please save your work and return to
                 dashboard
@@ -757,15 +810,16 @@ const Navbar = () => {
                   setOpenSettingDialog(false);
                 }}
               >
-                Go to dashboard
+                Save & Go to dashboard
               </Button>
             </div>
           )}
         </DialogContent>
 
         <DialogActions>
-          <div className="flex justify-between w-full px-4">
+          <div className="flex justify-center w-full px-4 pb-5 gap-5">
             <Button
+              startIcon={<CloseIcon />}
               size="medium"
               variant="outlined"
               color="error"
@@ -775,25 +829,26 @@ const Navbar = () => {
             >
               Cancel
             </Button>
-            <div className="flex gap-2">
-              <Button
-                size="medium"
-                variant="outlined"
-                disabled={page === "not dashboard"}
-                color="warning"
-              >
-                Reset to defaults
-              </Button>
+            <Button
+              startIcon={<RestartAltIcon />}
+              size="medium"
+              variant="outlined"
+              disabled={page === "not dashboard"}
+              color="warning"
+            >
+              Reset to defaults
+            </Button>
 
-              <Button
-                type="submit"
-                size="medium"
-                variant="outlined"
-                disabled={page === "not dashboard"}
-              >
-                Save
-              </Button>
-            </div>
+            <Button
+              startIcon={<SaveIcon />}
+              type="submit"
+              size="medium"
+              variant="outlined"
+              color="success"
+              disabled={page === "not dashboard"}
+            >
+              Save
+            </Button>
           </div>
         </DialogActions>
       </Dialog>

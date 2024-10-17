@@ -30,7 +30,6 @@ main {
   }
 }
 
-/* .design { */
 .MuiTabs-root {
   background-color: var(--blue);
   button {
@@ -83,11 +82,11 @@ main {
 .MuiInput-root::after {
   border-color: var(--blue) !important;
 }
-/* } */
 
 .MuiAutocomplete-option {
   color: var(--blue) !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
 
   .generalData-AHUDeck1 {
     animation: AHUDeck1 0.8s ease infinite alternate;
@@ -122,6 +121,8 @@ main {
 
 .MuiInputLabel-root {
   font-size: 14px !important;
+  color: var(--blue) !important;
+  font-weight: 600 !important;
 }
 
 .swal2-popup {
@@ -129,6 +130,22 @@ main {
 }
 .MuiOutlinedInput-notchedOutline legend {
   font-size: 0.65em !important;
+}
+
+.MuiInputAdornment-root .MuiTypography-root {
+  font-size: 13px;
+  color: var(--blue);
+}
+
+.MuiInputBase-input {
+  font-size: 13px !important;
+}
+
+canvas {
+  background-image: url("/public/imgs/logo_low_opacity.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
 @keyframes AHUDeck1 {

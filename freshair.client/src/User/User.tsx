@@ -98,14 +98,7 @@ const User = () => {
             </Suspense>
           }
         />
-        <Route
-          path="/design"
-          element={
-            <Suspense fallback={<Loading />}>
-              <Design />
-            </Suspense>
-          }
-        />
+        <Route path="/design" element={<Design />} />
 
         <Route path="*" element={<h1>Error : 404 , Page Not Found</h1>} />
       </Routes>

@@ -87,6 +87,8 @@ interface State {
 
   CurrencyOptions: string[];
   currency: string;
+  currencyFactor: string;
+  currencyFactorValue: number;
 
   unitQTY: number;
 
@@ -95,6 +97,16 @@ interface State {
   staticPressure: number;
   coilFaceVelocity: number;
   altitude: number;
+
+  //! Structure
+  AHUTypeOptions: string[];
+  AHUType: string;
+
+  customizeStructureOptions: string[];
+  customizeStructure: string;
+
+  ModelOptions: string[];
+  model: string;
 }
 
 const initialState: State = {
@@ -202,8 +214,11 @@ const initialState: State = {
 
   condensingUnitHeightScaling: 1,
 
-  CurrencyOptions: ["USD", "EUR", "GBP"],
-  currency: "USD",
+  //! DB
+  CurrencyOptions: [""],
+  currency: "",
+  currencyFactor: "",
+  currencyFactorValue: 0,
 
   unitQTY: 1,
 
@@ -212,6 +227,16 @@ const initialState: State = {
   staticPressure: 500,
   coilFaceVelocity: 2,
   altitude: 0,
+
+  //! Structure
+  AHUTypeOptions: ["Standard", "Hygienic"],
+  AHUType: "Standard",
+
+  customizeStructureOptions: ["Standard", "Customize"],
+  customizeStructure: "Standard",
+
+  ModelOptions: ["User1", "User2"],
+  model: "User1",
 };
 
 const StateContext = createContext<ContextType | undefined>(undefined);

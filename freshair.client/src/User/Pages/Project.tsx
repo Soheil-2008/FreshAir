@@ -19,13 +19,16 @@ import Swal from "sweetalert2";
 import Loading from "../../Components/Loading";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import ArticleIcon from "@mui/icons-material/Article";
 import AirIcon from "@mui/icons-material/Air";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 interface Project {
   id: number;
@@ -96,13 +99,12 @@ const Project = () => {
         token: "",
         permission: "",
         units: {
-          Dimensions: "",
+          Length: "",
           Temperature: "",
           Weight: "",
           WaterFlowRate: "",
           FinsPerLength: "",
           Capacity: "",
-          // SensibleCapacity: "",
           WaterPressureDrop: "",
           StaticPressure: "",
           CoilHumidity: "",
@@ -112,9 +114,7 @@ const Project = () => {
           RefrigerantMassFlow: "",
           AirVelocity: "",
           NominalPower: "",
-          PulleyDiameter: "",
-          ShaftDiameter: "",
-          NicotraCentredist: "",
+          Diameter: "",
           BeltSpeed: "",
           HumidifierLoad: "",
           CircuitLength: "",
@@ -431,7 +431,7 @@ const Project = () => {
           </div>
         </section>
 
-        <section className="w-1/2 lg:w-1/3 min-h-[75dvh] bg-[#fbfef8] shadow-md">
+        <section className="w-1/2 lg:w-1/4 min-h-[75dvh] bg-[#fbfef8] shadow-md">
           <div className="flex flex-col p-3 h-full">
             <div className="flex items-center justify-between w-full border-b border-slate-300 pb-3">
               <h2 className="text-xl text-black flex items-center gap-2">
@@ -516,7 +516,7 @@ const Project = () => {
           </div>
         </section>
 
-        {/* <section className="w-1/2 lg:w-1/4 min-h-[75dvh] bg-[#FBFEF8] shadow-md">
+        <section className="w-1/2 lg:w-1/4 min-h-[75dvh] bg-[#FBFEF8] shadow-md">
           <div className="flex flex-col p-3 h-full">
             <h2 className="text-xl text-black flex items-center gap-2 border-b border-slate-300 pb-3">
               <ArticleIcon color="primary" />
@@ -525,72 +525,72 @@ const Project = () => {
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Tag :</h4>
-              <h4>{globalState.tagInfo.Name || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Name || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Supply Air Flow :</h4>
-              <h4>{globalState.tagInfo.AirFlow || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.AirFlow || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Product :</h4>
-              <h4>{globalState.tagInfo.Product || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Product || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>QTY :</h4>
-              <h4>{globalState.tagInfo.QTY || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.QTY || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Model :</h4>
-              <h4>{globalState.tagInfo.Model || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Model || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Serial No. :</h4>
-              <h4>{globalState.tagInfo.SerialNo || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.SerialNo || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Air System :</h4>
-              <h4>{globalState.tagInfo.AirSystem || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.AirSystem || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Configuration :</h4>
-              <h4>{globalState.tagInfo.Configuration || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Configuration || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Location :</h4>
-              <h4>{globalState.tagInfo.Location || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Location || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Weather Rating :</h4>
-              <h4>{globalState.tagInfo.WeatherRating || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.WeatherRating || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Service :</h4>
-              <h4>{globalState.tagInfo.Service || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Service || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center border-b border-slate-300 hover:bg-slate-100">
               <h4>Certification :</h4>
-              <h4>{globalState.tagInfo.Certification || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Certification || "N/A"}</h4> */}
             </div>
 
             <div className="flex justify-between p-[6px] items-center hover:bg-slate-100">
               <h4>Remarks :</h4>
-              <h4>{globalState.tagInfo.Remarks || "N/A"}</h4>
+              {/* <h4>{globalState.tagInfo.Remarks || "N/A"}</h4> */}
             </div>
           </div>
-        </section> */}
+        </section>
 
-        <section className="w-1/2 lg:w-1/3 min-h-[75dvh] bg-[#FBFEF8] shadow-md relative">
+        <section className="w-1/2 lg:w-1/4 min-h-[75dvh] bg-[#FBFEF8] shadow-md relative">
           <div className="flex flex-col p-3 h-full">
             <h2 className="text-xl text-black flex items-center gap-2 border-b border-slate-300 pb-3">
               <ArticleIcon color="disabled" />
@@ -657,17 +657,23 @@ const Project = () => {
         </DialogContent>
 
         <DialogActions>
-          <div className="flex px-3 justify-between w-full pb-2">
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
             <Button
+              startIcon={<CloseIcon />}
               variant="outlined"
               color="error"
               onClick={() => setOpenDialog("")}
-              size="medium"
+              size="small"
             >
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" size="medium">
-              Create
+            <Button
+              startIcon={<AddIcon />}
+              type="submit"
+              variant="outlined"
+              size="small"
+            >
+              Add
             </Button>
           </div>
         </DialogActions>
@@ -687,23 +693,27 @@ const Project = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="outlined"
-            size="medium"
-            onClick={() => {
-              setOpenDialog("");
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="outlined"
-            size="medium"
-            color="error"
-            onClick={() => handleDeleteTag()}
-          >
-            Yes Delete
-          </Button>
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setOpenDialog("");
+              }}
+              startIcon={<CloseIcon />}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="outlined"
+              size="small"
+              color="error"
+              onClick={() => handleDeleteTag()}
+              startIcon={<DeleteOutlinedIcon />}
+            >
+              Delete
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
 
@@ -733,17 +743,25 @@ const Project = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => setOpenDialog("")}
-            size="medium"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" variant="outlined" size="medium">
-            Save
-          </Button>
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => setOpenDialog("")}
+              size="small"
+              startIcon={<CloseIcon />}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="outlined"
+              size="small"
+              startIcon={<SaveOutlinedIcon />}
+            >
+              Save
+            </Button>
+          </div>
         </DialogActions>
       </Dialog>
 
@@ -780,8 +798,9 @@ const Project = () => {
           />
         </DialogContent>
         <DialogActions>
-          <div className="flex px-3 justify-between w-full pb-2">
+          <div className="flex px-3 justify-center w-full pb-2 gap-5">
             <Button
+              startIcon={<CloseIcon />}
               variant="outlined"
               color="error"
               onClick={() => setOpenDialog("")}
@@ -789,8 +808,13 @@ const Project = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" variant="outlined" size="small">
-              Create
+            <Button
+              startIcon={<AddIcon />}
+              type="submit"
+              variant="outlined"
+              size="small"
+            >
+              Duplicate
             </Button>
           </div>
         </DialogActions>
